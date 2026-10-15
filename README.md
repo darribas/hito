@@ -66,42 +66,13 @@ eleventh app is a non-event and nothing ever gets renumbered.
   guard, all three contain it. The point is that any one file can be read — or
   copied into a terminal — and understood completely on its own.
 
-## Testing on a fresh VM (GNOME Boxes)
+## Testing
 
-Development happens against a Fedora COSMIC Spin VM in GNOME Boxes, using a
-post-install snapshot you revert between runs.
+Development happens against a Fedora COSMIC Spin VM in virt-manager: revert a
+post-install snapshot, run the one-liner (or one script) over SSH, observe,
+fix, repeat. Run it twice to check nothing changes the second time. To test an
+unmerged branch, prefix the one-liner with `PROVISION_REF=my-branch`.
 
-**One-time setup**
-
-1. In Boxes, create a VM from the Fedora COSMIC Spin ISO and complete the
-   install.
-2. Log in once, reach a COSMIC session, then **shut the VM down** — a snapshot
-   taken while powered off reverts more reliably than a live one.
-3. Select the VM → **Preferences** (three-dots menu) → **Snapshots** → **＋**.
-   Name it `clean-install`.
-
-**Each test run**
-
-1. Boot the VM, open a terminal, and run the one-liner:
-
-   ```bash
-   bash -c "$(curl -fsSL https://raw.githubusercontent.com/darribas/hito/main/bootstrap.sh)"
-   ```
-
-   To test an unmerged branch, set the ref:
-
-   ```bash
-   PROVISION_REF=my-branch bash -c "$(curl -fsSL https://raw.githubusercontent.com/darribas/hito/main/bootstrap.sh)"
-   ```
-
-2. Observe what breaks, fix it in the repo, push, and re-run.
-
-**Revert to a clean machine and retest**
-
-1. Shut the VM down.
-2. **Preferences** → **Snapshots** → select `clean-install` → its menu →
-   **Revert to this state**.
-3. Boot again — you're back to the pristine machine. Repeat the run.
-
-**Idempotency check** — after a successful run, *don't* revert. Just run
-`~/provision/all.sh` a second time. Nothing should change.
+[TESTING.md](TESTING.md) has the full setup: creating the VM and snapshot,
+SSH access, the Docker firewall fix the VM network needs, test loops, and how
+to capture a GUI setting as a payload.
