@@ -1,0 +1,8 @@
+[org/gnome/Ptyxis]
+profile-uuids=['6dfc5fa797ff55bb6d0b6f7b6ad0c02b']
+default-profile-uuid='6dfc5fa797ff55bb6d0b6f7b6ad0c02b'
+
+[org/gnome/Ptyxis/Profiles/6dfc5fa797ff55bb6d0b6f7b6ad0c02b]
+palette='Grass'
+use-custom-command=true
+custom-command='/usr/bin/zsh'

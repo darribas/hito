@@ -3,9 +3,9 @@
 # COSMIC Terminal with zsh + oh-my-zsh
 #
 # Installs zsh and oh-my-zsh, and gives COSMIC Terminal a default profile that
-# runs /usr/bin/zsh. zsh is used in COSMIC Terminal only: the login shell stays
-# bash (no chsh), so other terminals such as Ptyxis, TTYs, SSH sessions and
-# scripts are unaffected. The profile is a payload in config/, copied into
+# runs /usr/bin/zsh. The login shell stays bash (no chsh), so TTYs, SSH
+# sessions and scripts are unaffected; terminals get zsh only where a profile
+# asks for it (apps/ptyxis does the same for Ptyxis). The profile is a payload in config/, copied into
 # ~/.config/cosmic/ like apps/cosmic (see SPEC.md §13).
 #
 # Safe to re-run: dnf is a no-op once zsh is installed, oh-my-zsh is only
