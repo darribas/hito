@@ -1,0 +1,9 @@
+{
+  "WebAppInstallForceList": [
+    {"url": "https://outlook.cloud.microsoft/", "default_launch_container": "window", "create_desktop_shortcut": false, "fallback_app_name": "Outlook"},
+    {"url": "https://teams.cloud.microsoft/", "default_launch_container": "window", "create_desktop_shortcut": false, "fallback_app_name": "Teams"},
+    {"url": "https://theuniversityofliverpool-my.sharepoint.com/", "default_launch_container": "window", "create_desktop_shortcut": false, "fallback_app_name": "OneDrive"},
+    {"url": "https://read.readwise.io/", "default_launch_container": "window", "create_desktop_shortcut": false},
+    {"url": "https://dayone.me/", "default_launch_container": "window", "create_desktop_shortcut": false}
+  ]
+}
