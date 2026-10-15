@@ -97,6 +97,13 @@ scp -r apps/<name> <user>@<vm-ip>:/tmp/hito/apps/
 ssh -t <user>@<vm-ip> 'bash /tmp/hito/apps/<name>/setup.sh'
 ```
 
+Units that install Flatpaks are the exception: run that last step from a
+terminal **inside the VM** (`bash /tmp/hito/apps/<name>/setup.sh`), not over
+SSH. polkit only authorises system Flatpak installs from the desktop session,
+and `--noninteractive` turns its password prompt into a hard failure
+("Flatpak system operation Deploy not allowed for user"). Typing works in the
+VM; only pasting doesn't.
+
 **Idempotency check.** After a successful run, *don't* revert: run the same
 thing again. Nothing should change. To prove it for config payloads, hash the
 managed files before and after the second run:
