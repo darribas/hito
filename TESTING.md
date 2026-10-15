@@ -33,10 +33,13 @@ The commands below use `<vm-ip>` for the VM's address. It's handed out by
 libvirt's DHCP and can change, so look it up each session from the laptop:
 
 ```bash
-virsh -c qemu:///system domifaddr <vm>     # <vm>: name from `virsh -c qemu:///system list --all`
+virsh -c qemu:///system list --all                       # <vm>: the VM's name
+virsh -c qemu:///system domifaddr <vm> --source agent    # asks the guest agent
 ```
 
-(or `ip -4 addr show scope global` inside the VM). Check from the laptop:
+The plain `domifaddr <vm>` (DHCP lease) can come back empty. Fallbacks:
+`virsh -c qemu:///system net-dhcp-leases default`,
+`domifaddr <vm> --source arp`, or `ip -4 addr show scope global` inside the VM. Check from the laptop:
 `ssh <user>@<vm-ip>`.
 
 **4. If the VM has no internet, fix Docker's firewall rule.** Docker sets
@@ -152,6 +155,11 @@ Authorise its public key from the laptop:
 ```bash
 echo '<public key>' | ssh <user>@<vm-ip> 'mkdir -p ~/.ssh && chmod 700 ~/.ssh && cat >> ~/.ssh/authorized_keys && chmod 600 ~/.ssh/authorized_keys'
 ```
+
+The key lives in the container, so it's lost whenever the container is
+recreated. Then generate a new one, authorise it as above, and **retake the
+snapshot**: the old snapshot still carries the old key, so every revert would
+lock the container out again.
 
 The container can then copy units over and read config (`ssh -F <config>
 hito-vm ...`). The VM's sudo still asks for a password, so steps that need
