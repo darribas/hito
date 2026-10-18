@@ -128,6 +128,30 @@ diff -r /tmp/before ~/.config/cosmic
 Commit only the files that changed, and only the settings you meant to change:
 some settings pages write their defaults when you merely visit them.
 
+## Testing apps/gds_env without the full build
+
+gds_env's base image takes about an hour to build and needs more disk than the
+test VM has. `tests/gds-lite/Dockerfile` is a stand-in for it: same Jupyter
+base, a small `gds` conda env with Python and Node, and an `Rscript` that does
+nothing. It builds in a couple of minutes, and gds_env's real `frontend_code`
+and `frontend_agent` Dockerfiles build on top of it unchanged. It isn't a unit:
+`all.sh` never runs it.
+
+Build it as `gds:latest` before running the unit, so the unit skips the base
+build and only builds the two frontends (needs `apps/docker` first):
+
+```bash
+ssh <user>@<vm-ip> 'rm -rf /tmp/hito && mkdir -p /tmp/hito/apps'
+scp -r tests <user>@<vm-ip>:/tmp/hito/
+scp -r apps/docker apps/gds_env <user>@<vm-ip>:/tmp/hito/apps/
+ssh -t <user>@<vm-ip> 'bash /tmp/hito/apps/docker/setup.sh'
+ssh <user>@<vm-ip> 'docker build -t gds:latest /tmp/hito/tests/gds-lite'
+ssh -t <user>@<vm-ip> 'bash /tmp/hito/apps/gds_env/setup.sh'
+```
+
+The images it produces are only good for testing the unit and `gdsa`'s
+wiring: there's no geospatial stack and no R inside.
+
 ## Driving the VM from a container
 
 If the tool driving tests runs in a Docker container on the laptop (for
