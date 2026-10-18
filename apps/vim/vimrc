@@ -1,0 +1,76 @@
+" ~/.vimrc, installed by hito's apps/vim/setup.sh (overwritten on every run).
+" Adapted from gds_env's env/dev/vimrc.
+
+" Use Vim settings, rather than Vi settings. Must be first: it changes other
+" options as a side effect.
+set nocompatible
+
+set backspace=indent,eol,start
+set nobackup
+set history=50
+set ruler
+set showcmd
+set showmode
+set incsearch
+set hlsearch
+set ignorecase
+set showmatch
+set number
+set textwidth=78
+set autoindent
+set expandtab
+set tabstop=4
+set vb t_vb=
+set printoptions=number:y,paper:letter
+
+" Don't use Ex mode, use Q for formatting
+map Q gq
+
+syntax on
+filetype plugin indent on
+
+augroup vimrcEx
+  au!
+  " When editing a file, jump to the last known cursor position (not when
+  " the position is invalid, or when inside an event handler).
+  autocmd BufReadPost *
+    \ if line("'\"") > 0 && line("'\"") <= line("$") |
+    \   exe "normal g`\"" |
+    \ endif
+augroup END
+
+" vim-latex: always show the file name in grep results, even for one file.
+set grepprg=grep\ -nH\ $*
+
+" Plugins (vim-plug). Run :PlugInstall after adding one, :PlugUpdate to update.
+call plug#begin('~/.vim/plugged')
+Plug 'junegunn/vim-easy-align'
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+Plug 'junegunn/goyo.vim'
+Plug 'challenger-deep-theme/vim', { 'as': 'challenger-deep' }
+Plug 'logico-software/typewriter'
+Plug 'vim-latex/vim-latex'
+Plug 'tmhedberg/SimpylFold'
+Plug 'Konfekt/FastFold'
+Plug 'catppuccin/vim', { 'as': 'catppuccin', 'branch': 'main' }
+call plug#end()
+
+" Theme: Catppuccin, Latte when 'background' is light and Mocha when dark
+" (airline follows on its own). Both vim and gvim follow COSMIC's light/dark
+" mode as it is at startup, defaulting to dark. Vim can ask a terminal for its
+" background colour instead, but COSMIC Terminal always answers black.
+set termguicolors
+let s:cosmic_mode = expand('~/.config/cosmic/com.system76.CosmicTheme.Mode/v1/is_dark')
+let &background = filereadable(s:cosmic_mode) && readfile(s:cosmic_mode) == ['false'] ? 'light' : 'dark'
+if has('gui_running')
+  " No menu bar or toolbar
+  set guioptions-=m guioptions-=T
+  " Dark GTK window decorations to match
+  if &background ==# 'dark'
+    set guioptions+=d
+  endif
+endif
+" silent!: the first time vim starts, before PlugInstall has run, the
+" colorscheme isn't there yet
+silent! colorscheme catppuccin
